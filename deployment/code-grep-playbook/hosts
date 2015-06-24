@@ -1,0 +1,26 @@
+[web_lbl] # web load balancer
+# ubuntu 14.04 image
+cg-lbl1
+
+[mq_proxy] # message queue brokers
+# ubuntu 14.04 image
+cg-db001
+
+[web_servers]
+# ubuntu 14.04 image
+cg-lbl1
+
+[db_servers]
+#debian whizzy image
+cg-db001
+
+
+[storage_servers]
+# ubuntu 14.04 image
+cg-storage01
+
+[workers]
+#small machine - ubuntu 14.04 image 
+cg-worker01
+cg-worker03
+

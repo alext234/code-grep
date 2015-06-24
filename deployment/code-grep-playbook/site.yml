@@ -1,0 +1,17 @@
+- include: storage.yml
+
+- include: db.yml
+
+- include: msqueue.yml
+
+
+- include: workers.yml
+
+
+- include: web.yml
+
+
+- include: lbl.yml
+
+  
+

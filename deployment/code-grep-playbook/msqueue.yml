@@ -1,0 +1,16 @@
+- name: Run tasks on current ansible localhost
+  hosts: 127.0.0.1
+  connection: local
+  tasks:
+  - name: build msg_brokers binary 
+    shell: go build         -o /tmp/msg_brokers /home/cg/code/code-grep/src/msg_brokers.go
+    environment:
+      PATH: /usr/local/go/bin:{{ ansible_env.PATH }}
+      GOPATH: /home/cg/code/code-grep
+
+- hosts: mq_proxy
+  user: cg
+  sudo: yes
+  roles: 
+    - msgqueue
+

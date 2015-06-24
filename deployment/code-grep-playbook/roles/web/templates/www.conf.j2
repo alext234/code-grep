@@ -1,0 +1,9 @@
+[webserver]
+
+HttpPort = 8000 
+AccessTokenExpMinutes = 7200 # 5 days
+AccessTokenPrivKeyPath = "/home/cg/token_keys/jwt.rsa" #openssl genrsa -out app.rsa keysize
+AccessTokenPubKeyPath = "/home/cg/token_keys/jwt.rsa.pub" #openssl rsa -in app.rsa -pubout > app.rsa.pub
+WWWDir = /home/cg/www  # compiled version for publishing to actual server
+
+DbQueryTimeoutMilliseconds = 8000 #  especially those used for autocomplete

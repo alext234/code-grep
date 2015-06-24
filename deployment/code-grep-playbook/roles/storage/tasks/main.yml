@@ -1,0 +1,55 @@
+
+# make sure external hdd is formatted to the right fs
+- filesystem: fstype=ext4 dev=/dev/sdb
+
+
+- name: make sure there is data directory as mount point for external hdd
+  file: path=/mnt/data state=directory owner=cg group=cg
+
+
+- mount: name=/mnt/data src=/dev/sdb fstype=ext4 state=mounted opts=noatime
+
+- name: make sure there is data directory for glusterfs brick
+  file: path={{gluster_brick_dir}} state=directory owner=cg group=cg
+
+- name: make sure ulimits settings 
+  template:
+    src=limits.conf.j2
+    dest=/etc/security/limits.conf
+    owner=root group=root mode=0644
+
+# reload ulimit settings 
+- command: sudo sysctl -p 
+
+
+- name: ensure glusterfs is installed
+  apt:
+    pkg: "glusterfs-server"
+    state: present
+
+
+
+
+- name: ensure glusterfs-server server is running 
+  service:
+    name: glusterfs-server
+    state: started
+
+- name: Build bricks list
+  shell: echo {{groups.storage_servers | join(',')}} | sed "s%,%:{{gluster_brick_dir}} %g; s%$%:{{gluster_brick_dir}}%"
+  register: gluster_bricks
+  connection: local
+  sudo : false
+
+- name: Create default volume - only  run on the first gluster server 
+  shell: gluster volume info {{gluster_volume}} || gluster volume create {{gluster_volume}}  
+        transport {{gluster_transport}}
+        {{gluster_bricks.stdout}} 
+  when: inventory_hostname == groups.storage_servers[0] # TODO: change to group first hostname instead of hardcoding 
+
+- name: Start default volume
+  shell: 'gluster volume info {{gluster_volume}} | grep "Status: Started" || 
+                      gluster volume start {{gluster_volume}}'
+  when: inventory_hostname == groups.storage_servers[0]
+
+# TODO: ipv4 options for mongodb

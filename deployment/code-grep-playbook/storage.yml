@@ -1,0 +1,8 @@
+
+- hosts: storage_servers
+  user: cg
+  sudo: yes
+  roles: 
+    - storage
+
+  

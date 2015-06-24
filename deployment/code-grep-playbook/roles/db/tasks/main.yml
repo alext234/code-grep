@@ -1,0 +1,60 @@
+
+# make sure external hdd is formatted to the right fs
+- filesystem: fstype=ext4 dev=/dev/sdb
+
+# add user and group mongodb
+- group: name=mongodb state=present
+- user: name=mongodb comment="MongoDB"  group=mongodb
+
+- name: make sure there is data directory as mount point for external hdd
+  file: path=/mnt/data state=directory owner=mongodb group=mongodb
+
+- mount: name=/mnt/data src=/dev/sdb fstype=ext4 state=mounted opts=noatime
+
+- name: make sure ulimits settings 
+  template:
+    src=limits.conf.j2
+    dest=/etc/security/limits.conf
+    owner=root group=root mode=0644
+
+# reload ulimit settings 
+- command: sudo sysctl -p 
+
+- command: sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+
+- name: add mongodb repo
+  apt_repository:
+    repo: "deb http://downloads-distro.mongodb.org/repo/debian-sysvinit dist 10gen"
+    state: present
+
+- name: Create data directory for mongodb
+  file: path=/mnt/data/mongodb-data state=directory owner=mongodb group=mongodb
+
+- name: make sure there is log file for mongodb
+  file: path=/mnt/data/mongod.log owner=mongodb group=mongodb mode=0644 state=touch
+
+- name: MongoDB | Push default configuration template
+  template:
+    src=mongod.conf.j2
+    dest=/etc/mongod.conf
+    owner=root group=root mode=0644
+
+- name: ensure mongodb is installed
+  apt:
+    force: yes
+    pkg: "mongodb-org={{ mongo_version }}"
+    state: present
+
+
+
+- name: stop mongod service
+  service:
+    name: mongod
+    state: stopped
+
+- name: start mongod service
+  service:
+    name: mongod
+    state: started
+
+# TODO: ipv4 options for mongodb

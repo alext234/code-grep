@@ -1,0 +1,87 @@
+
+- name: make sure ulimits settings 
+  template:
+    src=limits.conf.j2
+    dest=/etc/security/limits.conf
+    owner=root group=root mode=0644
+
+# reload ulimit settings 
+- command: sudo sysctl -p 
+
+
+- name: make sure there is data directory as mount point from storage server
+  file: path=/mnt/data state=directory owner=cg group=cg
+
+
+- name: make sure there is cg_storage directory as mount point from storage server
+  file: path=/mnt/cg_storage state=directory owner=cg group=cg
+
+- name: ensure glusterfs -client is installed
+  apt:
+    pkg: "glusterfs-client"
+    state: present
+
+- name: Mount the glusterfs from storage server 
+  action: mount name=/mnt/data fstype=glusterfs src={{groups.storage_servers[0]}}:{{gluster_volume}} state=mounted
+
+- name: Mount the glusterfs from storage server 
+  action: mount name=/mnt/cg_storage fstype=glusterfs src={{groups.storage_servers[0]}}:{{gluster_volume}} state=mounted
+
+- name: make sure projects_uploaded exists
+  file: path=/mnt/data/projects_uploaded state=directory owner=cg group=cg
+
+- name: make sure projects_workdir exists
+  file: path=/mnt/data/projects_workdir state=directory owner=cg group=cg
+  
+- name: upload webserver 
+  copy: src=/tmp/webserver dest=/home/cg/webserver owner=cg group=cg mode=0555
+- name: upload www tar ball (html files etc)
+  copy: src=/tmp/www.tar.gz dest=/home/cg/www.tar.gz owner=cg group=cg mode=0444
+- name: make sure there is www directory as destination of extration
+  file: path=/home/cg/www state=directory owner=cg group=cg
+- name: extract www file
+  shell: tar xzvf /home/cg/www.tar.gz -C /home/cg/www
+- name: backup the current upload
+  shell: mkdir /home/cg/{{deployment_backup_name}};
+         cp /home/cg/webserver /home/cg/{{deployment_backup_name}}/;
+         cp /home/cg/www.tar.gz /home/cg/{{deployment_backup_name}}/
+
+
+
+- name: upload  libzmq libraries
+  copy: src=/usr/lib/libzmq.a dest=/usr/lib/libzmq.a owner=cg group=cg 
+- copy: src=/usr/lib/libzmq.la dest=/usr/lib/libzmq.la owner=cg group=cg 
+- copy: src=/usr/lib/libzmq.so dest=/usr/lib/libzmq.so owner=cg group=cg 
+- copy: src=/usr/lib/libzmq.so.3.1.0 dest=/usr/lib/libzmq.so.3.1.0 owner=cg group=cg 
+- copy: src=/usr/lib/libzmq.so.3 dest=/usr/lib/libzmq.so.3 owner=cg group=cg
+
+
+
+- name: upload key files for signing auth tokens 
+  copy: src=token_keys dest=/home/cg owner=cg group=cg mode=0444
+
+- name: update web server setttings  - www.conf
+  template:
+    src=www.conf.j2
+    dest=/home/cg/www.conf
+    owner=cg group=cg mode=0444
+
+- name: update web server settings - common.conf
+  template:
+    src=common.conf.j2
+    dest=/home/cg/common.conf
+    owner=cg group=cg mode=0444
+
+- name: ensure there is folder for web server  log files 
+  file: path={{log_dir}} state=directory owner=cg group=cg
+
+- name: create init.d file for webserver
+  template:
+    src=init-d-template.j2
+    dest=/etc/init.d/webserver
+    owner=root group=root mode=0751
+
+- name: Ensure service webserver is stopped
+  action: service name={{service_name}} state=stopped
+- name: Ensure service webserver is started again
+  action: service name={{service_name}} state=started

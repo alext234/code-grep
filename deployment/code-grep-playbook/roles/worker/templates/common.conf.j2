@@ -1,0 +1,29 @@
+[Common]
+BaseUrl = {{base_url}}
+DirProjectsUploaded = "/mnt/cg_storage/projects_uploaded"
+DirProjectsWorkDir	= "/mnt/cg_storage/projects_workdir"
+
+MyIp = {{ansible_eth0.ipv4.address }}   
+
+MongoDBIp = {{groups.db_servers[0]}}
+
+NewSignupQuota = 104857600 # new signup user, 100MB quota
+
+
+MaxUploadLimit  =  1000000000 # max upload limit to avoid unlimited upload
+
+ZmqProxyHost = {{groups.mq_proxy[0]}} 
+
+ZmqConfirmEmailPushPort = "5060"
+ZmqConfirmEmailPullPort  = "5061"
+  
+ZmqProjectToBeProcessedPushPort = "5062"
+ZmqProjectToBeProcessedPullPort = "5063"
+
+#general pub sub proxy
+ZmqGeneralPubPort = "5064"
+ZmqGeneralSubPort = "5065"
+
+#reset password email queue
+ZmqResetEmailPushPort = "5066"
+ZmqResetEmailPullPort  = "5067"

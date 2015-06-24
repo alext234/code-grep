@@ -1,0 +1,74 @@
+
+
+<div class="modal-body">
+
+	<div class="container">
+    <div class="row">
+			<div ng-if="form.name==null">
+				<strong>{{name}}</strong>
+			</div>
+  
+      <div class="col-md-1">
+      </div>
+      <div class="col-md-10">
+					
+				<form class="form-horizontal col-md-8" ng-if="form.name!=null" >
+				  <fieldset>
+				    <legend>Edit project</legend>
+
+				    <div class="form-group" >
+				      <label  class="col-md-2 control-label">Name</label>
+				      <div class="col-md-10">
+				        <input type="text" class="form-control" id="name" placeholder="project name" ng-model="form.name">
+				      </div>
+				    </div> <!-- form group -->
+				    <div class="form-group">
+				      <label  class="col-md-2 control-label">Status</label>
+				      <div class="col-md-10">
+				        <label type="text" class="form-control" disabled>{{form.status|format_status}}</label>
+				      </div>
+				    </div> <!-- form group -->
+				    
+				    <div class="form-group">
+				      <label  class="col-md-2 control-label">Size</label>
+				      <div class="col-md-10">
+				        <label type="text" class="form-control" disabled>{{form.total_size|number}}</label>
+				      </div>
+				    </div> <!-- form group -->
+				    
+				    <div class="form-group">
+				      <label  class="col-md-2 control-label">Allow public view</label>
+				      <div class="col-md-10">
+		             <input type="checkbox" ng-model="form_temp.isAllowPublicView">
+								 <span class="help-block">If enabled, anyone with the URL will be able to browse the project.</span>
+				      </div>
+				    </div> <!-- form group -->
+				    
+				    <div class="form-group">
+				      <label  class="col-md-2 control-label">URL</label>
+				      <div class="col-md-10">
+				        <a href="/view/project/{{form.id}}" class="btn btn-default" target="_blank"> Click to open </a>
+				      </div>
+				    </div> <!-- form group -->
+				    
+				    
+				  </fieldset>
+				</form>
+			
+	    </div> <!-- col -->
+      
+		</div> <!-- row-->
+
+		
+
+</div>
+
+<div class="modal-footer">
+		<span  class="pull-left">
+			<p class="text-info" ng-show="infoMessage!=null">{{infoMessage}}</p>
+			<p class="text-danger" ng-show="errorMessage!=null">{{errorMessage}}</p>
+		</span>
+
+    <button class="btn btn-primary" ng-click="ok()" ng-disabled="saveDisabled" >Save</button>
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>

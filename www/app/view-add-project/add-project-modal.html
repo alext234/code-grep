@@ -1,0 +1,134 @@
+
+<div class="modal-body">
+    <ul ng-show="isShowUploadView==true">
+      
+      
+      <div ng-repeat="item in uploader.queue" ng-hide="isGoingToRedirect">
+          <div>
+          Uploading <strong>{{ item.file.name }}</strong> ({{ item.file.size/1024/1024|number:2 }} MB )
+          <span class="pull-right">{{item.progress}}%</span>
+          </div>
+          
+              
+          <div ng-show="uploader.isHTML5">
+              <div class="progress">
+                  <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+              </div>
+          </div>
+          
+      </div>
+
+      <p class="text-danger">
+        {{uploadViewErrorMsg}}
+      </p>
+
+      <p>
+        {{uploadViewSuccesssMsg}}
+      </p>
+
+
+
+      
+    </ul> <!-- upload view  --->
+    <!------------------------------------------------------->
+    <ul ng-show="isShowAddUrlView==true">
+      
+			<div  ng-hide="addUrlViewErrorMsg!='' || addUrlViewSuccessMsg!=''">
+			  <div class="pull-left smallBusySpiner" >
+			  	<img src="busy-small.gif">
+			  </div>
+			  Sending URL to server...
+			</div>
+
+
+      <p class="text-danger">
+        {{addUrlViewErrorMsg}}
+      </p>
+
+      <p>
+        {{addUrlViewSuccessMsg}}
+      </p>
+
+
+
+      
+    </ul> <!-- add url view  --->
+    
+    <ul ng-if="getProfileData()==null"> <!-- prompt for login or signup -->
+      
+			<p class="text-info" >Please log in or sign up to add your own projects.</p>
+			
+				<a href class="btn btn-primary" ng-click="goToView('view/signup')"> Sign up</a>
+				<a href class="btn btn-success" ng-click="goToView('view/login')"> Log in</a>
+
+    </ul> <!-- prompt for login or signup -->
+    
+    <!------------------------------------------------------->
+    <ul ng-hide="isShowUploadView||isShowAddUrlView" ng-if="getProfileData()!=null">
+    	<tabset>
+				<tab heading="Add via URL" select="selectAddViaUrl()" active="isAddViaUrlActive" >
+
+					<div class="form-group">
+
+
+						<br>
+						<input type="text" class="form-control" ng-model="urlInput"  ng-change="checkUrlInput(urlInput)" placeholder="Enter URL">
+						<br>
+					</div>
+
+					<span class="help-block">
+						URL can be git link (<i>https://github.com/xxx/yyy.git</i>, <i>git://some.url/xxx.git</i>),
+						or link to tarball (<i>http://xxx.com/yyy.tar.bz2</i>, <i>http://xxx.com/yyy.zip</i>, etc.)
+					</span>
+				
+		
+				</tab>
+
+				<tab heading="Upload from local machine" select="selectAddViaUpload()" active="isAddViaUploadActive">
+					<br>
+					<div >
+						
+
+			  		<span ng-bind="uploadLimitCheckMessage" ng-class="uploadLimitCheckMessageClass"> </span>
+					  
+					</div>
+
+				
+					<div class="form-group" ng-show="isShowFileSelection">
+              <br>
+              
+  			      
+				      <input type="file" nv-file-select="" uploader="uploader" filters="filterBeforeAddToQueue"  class="form-control" onchange="angular.element(this).scope().fileNameChanged(this)" />
+				      
+				     
+	 	 	        
+	 	 	        
+				      <br>
+				      
+				      <span class="help-block">
+						File should be  tarball (<i>.tar.bz2</i>, <i>.zip</i>, <i>.tar.gz</i>, etc.). Maximum size is <strong> {{uploadLimitBytes/1024/1024|number:0}} MB</strong>.
+					    </span>
+
+ 			
+          </div> <!-- form-group-->
+				</tab>
+		
+		</tabset>
+    </ul>
+    
+    
+</div>
+<div class="modal-footer" ng-hide="isGoingToRedirect">
+		
+    <button class="btn btn-primary" ng-click="ok()"
+    ng-disabled="(selectAddVia=='upload' && uploader.queue.length==0)||(selectAddVia=='url' && isUrlInputValid==false)"
+    ng-hide="isShowUploadView||isShowAddUrlView" ng-if="getProfileData()!=null"
+    >
+    Submit
+      
+    </button>
+    <button class="btn btn-warning" ng-click="cancel()"
+    >Cancel</button>
+    
+</div>
+

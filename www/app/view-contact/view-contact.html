@@ -1,0 +1,74 @@
+<div class="paddingBeforeContact"> </div>
+<div class="container">
+    <div class="row">
+      <div class="col-md-2">
+      </div>
+      <div class="col-md-10" >
+      	
+      	<div class="well col-md-9">
+      		<div class="col-md-1">
+		      </div>
+					
+					<div class="col-md-10">
+						<form class="form-horizontal" name="contactForm" ng-submit="submitForm()">
+							<div class="form-group">
+					    	<legend >Contact us </legend>
+					    </div>
+							
+
+							
+
+							<div class="alert alert-dismissable alert-success" ng-if="isShowSuccess">
+								Feedback received. We will contact you shortly.
+							</div>
+
+
+							<fieldset ng-disabled="isSubmittedSuccess">
+
+								  <alert type="danger" close="closeError()" ng-if="isShowError && !isShowSuccess">There was error submitting the form. Please try again later. </alert>
+
+
+							    <div class="form-group">
+							    	<input type="text" class="form-control" name="name" placeholder="Name" ng-model="formInfo.name" required ng-minlength=2>
+							    </div>
+
+							    <div class="form-group">
+										<input type="email" class="form-control" name="email" placeholder="Email address"  ng-model="formInfo.email"  required>
+							    </div>
+							    <div class="form-group">
+							    	<input type="text" class="form-control" name="subject" placeholder="Subject" ng-model="formInfo.subject" required>
+							    </div>
+							    <div class="form-group">
+						        <textarea class="form-control" rows="4" name="feedback" placeholder="Feedback" ng-model="formInfo.feedback" required></textarea>
+
+							    </div>
+
+							    <div class="form-group">
+
+    								<button type="submit" class="btn btn-primary pull-right" ng-show="!isShowSending" ng-hide="isSubmittedSuccess">Submit</button>
+    								<div class="text-muted pull-right" ng-show="isShowSending"> Sending feedback form ...</div>
+    
+									</div>
+
+
+							  </fieldset>
+						
+
+						</form>
+		      </div>
+
+					
+
+      		<div class="col-md-1">
+		      </div>
+
+       	</div>
+      	
+      </div>
+      <div class="col-md-1">
+      
+      </div>
+    </div> <!-- row -->
+</div>
+
+      

@@ -1,0 +1,103 @@
+
+- name: make sure ulimits settings 
+  template:
+    src=limits.conf.j2
+    dest=/etc/security/limits.conf
+    owner=root group=root mode=0644
+
+# reload ulimit settings 
+- command: sudo sysctl -p 
+
+
+- name: make sure there is cg_storage as mountpoint from storage servers
+  file: path=/mnt/cg_storage state=directory owner=cg group=cg
+
+
+- name: ensure glusterfs -client is installed
+  apt:
+    pkg: "glusterfs-client"
+    state: present
+
+- name: Mount the glusterfs from storage server 
+  action: mount name=/mnt/cg_storage fstype=glusterfs src={{groups.storage_servers[0]}}:{{gluster_volume}} state=mounted
+
+  
+- name: upload backend_worker
+  copy: src=/tmp/backend_worker dest=/home/cg/backend_worker owner=cg group=cg mode=0555
+
+- name: upload git2 and global custom built
+  copy: src=git2 dest=/home/cg/git2 owner=cg group=cg mode=0555
+
+- name: make sure there is prefix directory 
+  file: path=/home/cg/code/prefix state=directory owner=cg group=cg
+
+
+- name: upload prefix.tar.gz
+  copy: src=prefix.tar.gz dest=/home/cg owner=cg group=cg mode=0555
+
+- name: extract prefix
+  shell: tar xzvf /home/cg/prefix.tar.gz -C /home/cg/code
+
+- name: upload ctags
+  copy: src=ctags dest=/home/cg/code/prefix/bin/ctags owner=cg group=cg mode=0555
+
+- name: upload ctags config file .ctags
+  copy: src=.ctags dest=/home/cg/.ctags owner=cg group=cg mode=0444
+
+- name: upload gtags .globalrc
+  copy: src=.globalrc dest=/home/cg/ owner=cg group=cg mode=0444
+
+- name: ensure libssh2 is present 
+  apt:
+    pkg: "libssh2-1-dev"
+    state: present
+
+
+- name: ensure python-pygments is installed as required by gtags
+  apt:
+    pkg: "python-pygments"
+    state: present
+- name: ensure unzip is installed
+  apt:
+    pkg: "unzip"
+    state: present
+- name: upload libgit2 and libmongoc, libbson
+  copy: src=/usr/lib/libgit2.so.21 dest=/usr/lib/libgit2.so.21 owner=root group=root
+- copy: src=/usr/local/lib/libmongoc-1.0.so.0.0.0 dest=/usr/lib/libmongoc-1.0.so.0 owner=root group=root
+- copy: src=/usr/local/lib/libbson-1.0.so.0.0.0 dest=/usr/lib/libbson-1.0.so.0 owner=root group=root
+
+- name: upload  libzmq libraries
+  copy: src=/usr/lib/libzmq.a dest=/usr/lib/libzmq.a owner=cg group=cg 
+- copy: src=/usr/lib/libzmq.la dest=/usr/lib/libzmq.la owner=cg group=cg 
+- copy: src=/usr/lib/libzmq.so dest=/usr/lib/libzmq.so owner=cg group=cg 
+- copy: src=/usr/lib/libzmq.so.3.1.0 dest=/usr/lib/libzmq.so.3.1.0 owner=cg group=cg 
+- copy: src=/usr/lib/libzmq.so.3 dest=/usr/lib/libzmq.so.3 owner=cg group=cg
+
+
+
+
+- name: update backend worker  setttings  - backend.conf
+  template:
+    src=backend.conf.j2
+    dest=/home/cg/backend.conf
+    owner=cg group=cg mode=0444
+
+- name: update backend worker settings - common.conf
+  template:
+    src=common.conf.j2
+    dest=/home/cg/common.conf
+    owner=cg group=cg mode=0444
+
+- name: ensure there is folder for backend worker   log files 
+  file: path={{log_dir}} state=directory owner=cg group=cg
+
+- name: create init.d file for backend worker 
+  template:
+    src=init-d-template.j2
+    dest=/etc/init.d/backend_worker
+    owner=root group=root mode=0751
+
+- name: Ensure service backend worker is stopped
+  action: service name={{service_name}} state=stopped
+- name: Ensure service backend worker is started again
+  action: service name={{service_name}} state=started

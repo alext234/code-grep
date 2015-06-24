@@ -1,0 +1,232 @@
+
+.navbar-nav.navbar-right:last-child {
+  margin-right: 0;
+}
+body { padding-top: 30px;  }
+  
+
+.affix {
+	z-index: 1000;
+}
+
+
+a {cursor:pointer;}
+
+.smallBusySpiner {
+	padding-right: 10%;
+}
+
+.busySpinner {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-left: -30px;
+
+	
+}
+
+.paddingBeforeIndex {
+	padding-top: 50px;
+}
+
+
+.paddingIndexPageParagraph {
+	padding-top: 30px;
+}
+
+.paddingBeforeContact {
+	padding-top: 50px;
+}
+
+.codeViewLeftPane {
+	left:10;
+	top:100px;
+	width: 200px;
+}
+
+.paddingBeforeSourcePath {
+	padding-top: 0px;
+}
+
+
+
+.paddingBeforeCodeView {
+	padding-top: 80px;
+}
+
+.paddingBeforeCodeView1 {
+	padding-top: 70px;
+}
+.paddingBeforeCodeView2 {
+	padding-top: 20px;
+}
+
+
+.paddingAfterCodeView {
+	padding-bottom: 70px;
+}
+
+
+.dirListView {
+	margin-left:50px;
+}
+
+.dirTypeItem {
+	font-weight: bold;
+	padding-top: 4px;
+	padding-bottom: 4px;
+ 	cursor: pointer;
+ 	text-decoration:none
+}
+.dirTypeItem:hover {
+   text-decoration: underline; // changed from
+}
+
+.fileTypeItem {
+	padding-top: 4px;
+	padding-bottom: 4px;
+  cursor: pointer;
+ 	text-decoration:none
+
+}
+.fileTypeItem:hover {
+   text-decoration: underline; // changed from
+}
+
+.padLeftCodeView {
+	padding-left: 30px;
+	
+}
+
+.caret.caret-reversed {
+    border-top-width: 0;
+    border-bottom: 4px solid #000000;
+}
+
+.caret-right {
+    border-bottom: 4px solid transparent;
+    border-top: 4px solid transparent;
+    border-left: 4px solid;
+    display: inline-block;
+    height: 0;
+    opacity: 0.3;
+    vertical-align: top;
+    width: 0;
+}
+
+.modal-dialog {
+	  padding-top: 3%;
+}
+
+.path-active {
+  font-weight: bold;
+}
+
+.path-item {
+	margin-right: 3;
+	margin-left: 3;
+  cursor: pointer;
+  color: black;
+}
+.path-item:hover {
+   text-decoration: underline; // changed from
+}
+
+
+.img-no-shadow {
+    
+    margin-left: 55px;
+}
+
+.img-shadow {
+    box-shadow: 5px 5px 10px #888888;
+    margin-left: 55px;
+}
+
+.popup-overlay {
+    position:absolute;
+    background: #FFFACD		;
+    display:none;
+    box-shadow: 5px 5px 10px #888888;
+    border: 1px;
+
+}
+
+.zero-margin-bottom {
+	margin-bottom:0px;
+}
+
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
+
+.navbar-form .input-group .form-control {
+     width: 400px;
+}
+.navbar-form .input-group .btn-group {
+	margin-left:10px;
+}
+
+/* remove border and padding for code view */
+pre {
+  border:0px;
+  padding:0px;
+  
+}
+
+/*line highlighted*/
+.hljs-highlight{
+  background: #DCDCDC;
+  
+}
+
+.hljs-highlight{
+  background: #DC143C;
+  
+}
+
+.hljs-linenumber {
+	color: #DCDCDC;
+	width: 50px;
+	float:left;
+	margin-right:10px;
+	text-align:right;
+
+	
+}
+
+.codeViewExtraProperties {
+	cursor: pointer; /*hand */
+	padding-top:20px;
+}
+
+/* line image*/
+blockquote {
+	font-size: small;
+  border-left: solid 1px #D3D3D3;
+  
+
+}
+
+.result-href {
+	font-size : small;
+}
+
+.result-href-popup {
+	margin-left:10px;
+}
+
+.form-horizontal .control-label{
+/* text-align:right; */
+text-align:left;
+
+}
+
+.tag-class-one {
+	color: #FF0099	;
+}
+
+.tag-class-two {
+	color: #990099;
+	
+}

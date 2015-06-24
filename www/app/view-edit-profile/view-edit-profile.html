@@ -1,0 +1,100 @@
+
+<div class="paddingBeforeContact"> </div>
+<div class="container">
+    <div class="row">
+      <div class="col-md-2">
+      </div>
+      <div class="col-md-10" >
+      	
+      	<div class="well col-md-9">
+      		<div class="col-md-1">
+		      </div>
+					
+					<div class="col-md-10">
+						<form class="form-horizontal" name="userForm">
+							<div class="form-group">
+					    	<legend >User profile </legend>
+					    </div>
+							
+
+							
+
+
+							<fieldset>
+									<div class="form-group" ng-if="infoMessage!=null"><!-- info message -->
+										
+							    	<alert type="info" >{{infoMessage}}</alert>
+							    	
+									</div> <!-- info message -->
+									<div class="form-group" ng-if="errorMessage!=null"><!-- error message -->
+										<alert type="danger" >{{errorMessage}}</alert>
+									</div> <!-- error message -->
+									
+								  
+
+
+									<div >
+								    <div class="form-group" ng-if="getProfileData()!=null">
+								    	<label class="col-lg-4 control-label">Password</label>
+	      							<div class="col-lg-8">
+	        							<a href class="btn btn-primary btn-sm" ng-show="!isShowChangePassword" ng-click="startChangePassword()">Change password</a>
+	        							
+	        							<a href class="btn btn-primary btn-sm" ng-show="isShowChangePassword" ng-click="handleSubmitPassword()">Submit</a>
+	        							<a href class="btn btn-warning btn-sm" ng-show="isShowChangePassword" ng-click="cancelChangePassword()">Cancel</a>
+	      							</div>
+								    </div>
+	
+								    <div class="form-group" ng-show="isShowChangePassword">
+								    	<label class="col-lg-4 control-label"></label>
+	      							<div class="col-lg-8">
+	      							<input type="password" class="form-control" name="password1" placeholder="Enter new password"  ng-model="form.password1"  required>
+	      							</div>
+								    </div>
+	
+								    <div class="form-group" ng-show="isShowChangePassword">
+								    	<label class="col-lg-4 control-label"></label>
+	      							<div class="col-lg-8">
+	        						<input type="password" class="form-control" name="password2" placeholder="Re-Enter new password"  ng-model="form.password2"  required>
+	      							</div>
+								    </div>
+	
+	
+								    <div class="form-group" ng-if="getProfileData()!=null">
+								    	<label class="col-lg-4 control-label">Email</label>
+	      							<div class="col-lg-8 ">
+	        							<div class="control-label  text-left"> {{getProfileData().email}}</div>
+	      							</div>
+								    </div>
+								    
+								    <div ng-if="getProfileData()!=null">
+									    <div class="form-group">
+									    	<label class="col-lg-4 control-label">Total space quota  </label>
+		      							<div class="col-lg-8">
+		        							<div class="control-label  text-left">  {{getProfileData().quota /1024/1024|number:0 }} MB</div>
+		        							<a href="/view/manage-projects">View project usage breakdowns</a>
+		      							</div>
+									    </div>
+		
+
+										</div>
+		
+									
+									</div>
+
+							  </fieldset>
+						
+
+						</form>
+		      </div>
+
+					
+
+
+       	</div>
+      	
+      </div>
+    </div> <!-- row -->
+</div>
+
+      
+

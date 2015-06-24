@@ -1,0 +1,8 @@
+gluster_volume: cg_storage
+deployment_backup_name: "{{ ansible_date_time.date }}_{{ ansible_date_time.time }}" # folder name to store the deployment backup
+log_dir: "/mnt/data/webserver_log_{{inventory_hostname}}"
+# these are options for init.d service script 
+daemon: /home/cg/webserver
+pidfile: /var/run/webserver.pid
+daemon_opts: "-config=/home/cg/common.conf,/home/cg/www.conf  -log_dir={{log_dir}} -v=1 2>{{log_dir}}/stderr_{{ansible_date_time.date}}_{{ansible_date_time.time}}.log "
+service_name: webserver

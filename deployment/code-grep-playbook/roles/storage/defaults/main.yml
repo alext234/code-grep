@@ -1,0 +1,4 @@
+gluster_volume: cg_storage
+gluster_replica: 1
+gluster_transport: tcp
+gluster_brick_dir: /mnt/data/data_brick

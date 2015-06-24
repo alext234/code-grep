@@ -1,0 +1,54 @@
+
+- name: make sure ulimits settings 
+  template:
+    src=limits.conf.j2
+    dest=/etc/security/limits.conf
+    owner=root group=root mode=0644
+
+# reload ulimit settings 
+- command: sudo sysctl -p 
+
+
+- name: upload msg_brokers
+  copy: src=/tmp/msg_brokers dest=/home/cg/msg_brokers owner=cg group=cg mode=0555
+
+
+
+- name: upload  libzmq libraries
+  copy: src=/usr/lib/libzmq.a dest=/usr/lib/libzmq.a owner=cg group=cg 
+- copy: src=/usr/lib/libzmq.la dest=/usr/lib/libzmq.la owner=cg group=cg 
+- copy: src=/usr/lib/libzmq.so dest=/usr/lib/libzmq.so owner=cg group=cg 
+- copy: src=/usr/lib/libzmq.so.3.1.0 dest=/usr/lib/libzmq.so.3.1.0 owner=cg group=cg 
+- copy: src=/usr/lib/libzmq.so.3 dest=/usr/lib/libzmq.so.3 owner=cg group=cg
+
+- name: ensure glusterfs -client is installed
+  apt:
+    pkg: "glusterfs-client"
+    state: present
+
+- name: ensure there is mountpoint for glusterfs cg_storage
+  file: path=/mnt/cg_storage state=directory owner=cg group=cg
+
+- name: Mount the glusterfs from storage server 
+  action: mount name=/mnt/cg_storage fstype=glusterfs src={{groups.storage_servers[0]}}:{{gluster_volume}} state=mounted
+
+- name: ensure there is folder for msg_brokers log files 
+  file: path={{log_dir}} state=directory owner=cg group=cg
+
+- name: update msg_brokers.conf 
+  template:
+    src=msg_brokers.conf.j2
+    dest=/home/cg/msg_brokers.conf
+    owner=cg group=cg mode=0644
+
+
+- name: create init.d file for msg_brokers
+  template:
+    src=init-d-template.j2
+    dest=/etc/init.d/msg_brokers
+    owner=root group=root mode=0751
+
+- name: Ensure service msg_brokers is stopped
+  action: service name={{service_name}} state=stopped
+- name: Ensure service msg_brokers is started
+  action: service name={{service_name}} state=started

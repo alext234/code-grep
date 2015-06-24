@@ -1,0 +1,104 @@
+
+<div class="paddingBeforeContact"> </div>
+<div class="container">
+    <div class="row">
+      <div class="col-md-1">
+      </div>
+      <div class="col-md-11" >
+      	
+      	<div class="col-md-11">
+
+					<div class="col-md-11">
+
+								<!---------------- error and info message ---------------->
+								<div class="col-md-12">
+									<div class="col-md-1">
+									</div>
+									<div class="col-md-11">
+										<div class="form-group" ng-if="infoMessage!=null"><!-- info message -->
+											
+								    	<alert type="info" >{{infoMessage}}</alert>
+								    	
+										</div> <!-- info message -->
+										<div class="form-group" ng-if="errorMessage!=null"><!-- error message -->
+											<alert type="danger" >{{errorMessage}}</alert>
+										</div> <!-- error message -->
+									</div>
+								</div>
+							  <!---------------- error and info message ---------------->
+
+
+									
+							    <div ng-if="getProfileData()!=null && errorMessage==null && projectList.length>0" >
+										<table class="table table-striped dirListView">
+										 	<thead>
+		    								<tr>
+		    									<th class="col-md-3"> <a href="" ng-click="predicate = 'name'; reverse=!reverse">Project name </a></th>
+		    									
+		    									<th class="col-md-1"> <a href="" ng-click="predicate = 'total_size'; reverse=!reverse" class="pull-right"> Size</a></th>
+		    									<th class="col-md-1"> <a href="" ng-click="predicate = 'status'; reverse=!reverse" class="pull-right"> Status</a></th>
+		    									<th class="col-md-1">
+		    									<a ng-click="predicate = 'view_permission'; reverse=!reverse" class="pull-right"  > Public view</a> </th>
+		    									
+		    									<th class="col-md-2">
+		    									</th>
+		    									
+		    								</tr>
+		    							</thead>
+										  <tbody>
+										    <tr ng-repeat="item in projectList | orderBy:[predicate]:reverse"
+									    class="info"   >
+										      <td
+										      class="col-md-3">
+										      <a href="/view/project/{{item.id}}" target="_blank">{{item.name}}</a><span ng-if="item.name"></span>
+										      	
+										      </td>
+										      
+										      <td class="col-md-1">
+										      		<span  class="pull-right"> {{item.total_size|number}} </span>
+										      </td>
+										      
+										      <td class="col-md-1">
+										      	<span  class="pull-right"> {{item.status|format_status}} </span>
+										      </td>
+										      <td class="col-md-1">
+										      	<span  class="pull-right" > {{item.view_permission=='public'?'Yes':'No'}} </span>
+										      </td>
+										      <td class="col-md-2">
+	  									      <div class="btn-group pull-right" role="group"  >
+	  									      	<a href class="btn btn-primary btn-xs" ng-click="handleEdit(item.name, item.id)"> Edit</a>
+	  									      	<a href class="btn btn-danger btn-xs" ng-click="handleDelete(item.name, item.id)"> Delete</a>
+	  									      	
+	  									      </div>
+
+										      </td>
+									    	</tr>
+	 
+										  </tbody>
+										</table>
+					
+										
+							    </div>
+							    
+								<div class="col-md-12">
+									<div class="col-md-1">
+									</div>
+									<div class="col-md-11">
+
+										<span ng-if="getProfileData()!=null && projectList.length>0" > Total space used: {{totalUsedSpace/1024/1024|number:2}}/<strong>{{getProfileData().quota/1024/1024|number:2}}</strong> MB.  </span>  <p class="text-danger" ng-if="totalUsedSpace>getProfileData().quota"> You have exceeded your quota!</p>
+									</div>
+								</div>
+
+		      </div>
+
+					
+
+
+       	</div>
+      	
+      </div>
+    </div> <!-- row -->
+</div>
+
+      
+

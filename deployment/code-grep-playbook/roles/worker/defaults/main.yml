@@ -1,0 +1,7 @@
+gluster_volume: cg_storage
+log_dir: "/mnt/cg_storage/backend_worker_log_{{inventory_hostname}}"
+# these are options for init.d service script 
+daemon: /home/cg/backend_worker
+pidfile: /var/run/backend_worker.pid
+daemon_opts: "-config=/home/cg/common.conf,/home/cg/backend.conf  -log_dir={{log_dir}} -v=1 2>{{log_dir}}/stderr_{{ansible_date_time.date}}_{{ansible_date_time.time}}.log "
+service_name: backend_worker

@@ -1,0 +1,2 @@
+export GOPATH=/home/cg/code/code-grep
+export PATH=$PATH:/usr/local/go/bin

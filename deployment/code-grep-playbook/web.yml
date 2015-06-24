@@ -1,0 +1,23 @@
+- name: Run tasks on current ansible localhost
+  hosts: 127.0.0.1
+  connection: local
+  tasks:
+  - name: build webserver based on latest code on localhost
+    shell: go build         -o /tmp/webserver /home/cg/code/code-grep/src/webserver/server.go
+    environment:
+      PATH: /usr/local/go/bin:{{ ansible_env.PATH }}
+      GOPATH: /home/cg/code/code-grep
+
+
+  - name: build www directory with grunt
+    shell: chdir=/home/cg/code/code-grep/www  grunt
+
+  - name: compress html directory 
+    shell: tar czvf /tmp/www.tar.gz   -C /home/cg/code/code-grep/www/dist ./
+
+- hosts: web_servers
+  user: cg
+  sudo: yes
+  roles: 
+    - web
+

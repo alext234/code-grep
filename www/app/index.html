@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="cgApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="cgApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="cgApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="cgApp"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Code/Grep</title>
+  <meta name="description" content="Code/Grep">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	
+	
+  
+	<!-- build:js /components.min.js -->
+	<script src="/bower_components/angular/angular.min.js"></script>
+  <script src="/bower_components/angular-resource/angular-resource.min.js"></script>
+  <script src="/bower_components/angular-route/angular-route.min.js"></script>
+  <script src="/bower_components/angular-utf8-base64/angular-utf8-base64.min.js"></script>
+  <script src="/bower_components/angular-cookies/angular-cookies.min.js"></script>
+  <script src="/ui-bootstrap-tpls-0.11.0.min.js"></script>
+	<script src="/highlight.pack.js"></script>
+  <script src="/bower_components/angular-highlightjs/angular-highlightjs-mod.js"></script>
+  <script src="/angular-file-upload.min.js"></script>
+  
+  <!-- endbuild -->
+  
+   <!-- build:css /style.min.css -->
+  <link rel="stylesheet" href="/bootstrap.min.css" media="screen" type="text/css">
+  <link href="/todc-bootstrap.min.css" rel="stylesheet">
+  <link href="/todc-starter-template.css" rel="stylesheet">
+	<link rel="stylesheet" href="/highlight.css" media="screen" type="text/css">
+	<link rel="stylesheet" href="/app.css" media="screen" type="text/css">
+   <!-- endbuild -->
+  
+        
+        <![endif]-->
+  <base href="/">
+
+
+</head>
+<body>
+  <nav class="navbar navbar-default navbar-inverse  navbar-fixed-top" role="navigation" ng-controller="navBarCtrl">
+    <div class="container-fluid">
+          <ul class="nav navbar-nav">
+            
+            <li class="dropdown">
+              <!-- Account menu -->
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Project  <b class="caret"></b> </a>
+              <ul class="dropdown-menu">
+              	<li><a href="/view/index"> Home</a> </li>
+               	<li><a ng-click="openAddProjetDialog($event)"   data-toggle="modal"  >Add project</a></li>
+                                                        
+								<li><a href ng-click="goToView('view/manage-projects')" ng-if="getProfileData()!=null" >Manage projects</a></li>
+								
+                
+              </ul>
+              <!-- end of Account menu -->
+            </li>
+
+
+          </ul>
+          
+
+          
+				 	
+					
+          <form class="navbar-form navbar-left" role="search" id="navbarSearchForm" ng-cloak ng-show="isActiveSearchForm('/view/project')">
+  					 <div class="input-group">
+							<input type="text" ng-model="searchTerm" placeholder="Search"
+										class="form-control"
+										
+										typeahead-focus-first="false"
+										typeahead-editable="true"
+										ng-enter="searchEnterKey()"
+										
+										>
+
+
+							<buttons-radio class="btn-group" data-toggle="buttons-radio" model='selectedSearchOption' options='searchOptions'></buttons-radio>
+						</div><!-- input-group -->
+					</form>
+					
+
+          <ul class="nav navbar-nav navbar-right">
+            
+            <li class="dropdown">
+              <!-- Account menu -->
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span ng-bind="getProfileData()!=null?getProfileData().email:'Account'"></span> <b class="caret"></b> </a>
+              <ul class="dropdown-menu">
+              	
+              	<li><a href ng-click="goToView('view/login')" ng-if="getProfileData()==null">Log in</a></li>
+              	<li><a href ng-click="goToView('view/signup')" ng-if="getProfileData()==null">Sign up</a></li>
+                
+                
+                <li><a href ng-click="goToView('view/edit-profile')" ng-if="getProfileData()!=null">Profile</a></li>
+              	<li><a href ng-click="handleLogout()" ng-if="getProfileData()!=null">Log out</a></li>
+
+                <li><a href ng-click="goToView('view/contact')">Contact us </a></li>
+
+              </ul>
+              <!-- end of Account menu -->
+            </li>
+          </ul>
+    </div>  </nav> <!-- nav bar -->
+
+
+  <div class="container-fluid">
+    <div class="ng-view" id="idMainView"> </div>
+  </div>  <!-- container -->
+
+  
+
+  
+  
+
+
+  
+	
+  
+  <!-- build:js /app.min.js -->
+	
+	<script src="/view-project/view-project.js"></script>
+	<script src="/app.js"></script>
+  <script src="/view-signup/view-signup.js"> </script>
+  <script src="/view-add-project/view-add-project.js"></script>
+  <script src="/view-contact/view-contact.js"></script>
+  <script src="/view-index/view-index.js"> </script>
+  <script src="/view-edit-profile/view-edit-profile.js"> </script>
+  <script src="/view-login/view-login.js"> </script>
+  <script src="/view-forgot-password/view-forgot-password.js"> </script>
+	<script src="/view-manage-projects/view-manage-projects.js"> </script>
+	
+	
+  <script src="/components/version/interpolate-filter.js"></script>
+  <script src="/components/version/version.js"></script>
+  <script src="/components/version/version-directive.js"></script>
+  <!-- endbuild -->
+
+
+
+
+</body>
+</html>

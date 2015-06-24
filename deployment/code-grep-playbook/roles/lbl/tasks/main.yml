@@ -1,0 +1,69 @@
+
+- name: make sure ulimits settings 
+  template:
+    src=limits.conf.j2
+    dest=/etc/security/limits.conf
+    owner=root group=root mode=0644
+
+# reload ulimit settings 
+- command: sudo sysctl -p 
+
+
+- name: make sure there is data directory as mount point from storage server
+  file: path=/mnt/data state=directory owner=cg group=cg
+
+
+
+- name: ensure glusterfs -client is installed
+  apt:
+    pkg: "glusterfs-client"
+    state: present
+
+- name: Mount the glusterfs from storage server 
+  action: mount name=/mnt/data fstype=glusterfs src={{groups.storage_servers[0]}}:{{gluster_volume}} state=mounted
+
+
+- name: update /etc/default/haproxy
+  template:
+    src=default_haproxy
+    dest=/etc/default/haproxy
+
+- name: make sure there /etc/haproxy
+  file: path=/etc/haproxy state=directory owner=cg group=cg
+
+- name: update haproxy.cfg
+  template:
+    src=haproxy.cfg.j2
+    dest=/etc/haproxy/haproxy.cfg
+
+
+
+- name: upload maintenance file - to be displayed when all servers are down (503 mode)
+  copy: src=maintenance.http dest=/home/cg/maintenance.http owner=cg group=cg 
+
+- name: upload key files for tls (https)
+  copy: src=tls dest=/home/cg owner=cg group=cg  mode=0644
+
+- name: install haproxy ppa
+  action: apt_repository repo='deb http://ppa.launchpad.net/nilya/haproxy-1.5/ubuntu quantal main' state=present
+
+
+
+
+- name: ensure haproxy is installed
+  apt:
+    pkg: "haproxy"
+    force: yes
+    state: present
+
+- name: stop haproxy service 
+  service:
+    name: haproxy
+    state: stopped
+
+
+- name: start haproxy service 
+  service:
+    name: haproxy
+    state: started
+

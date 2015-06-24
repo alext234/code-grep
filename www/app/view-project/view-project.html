@@ -1,0 +1,290 @@
+
+  <div class="container">
+
+    <div class="row">
+
+      <div class="col-md-1 col-lg-1 col-sm-1"> <!--- left area -->
+				
+      </div>  <!--- left area -->
+      <!-- -->
+      <div class="col-md-10 col-lg-10 col-sm-10" >   <!-- center area -->
+      		
+
+					<div class="container" affix >
+							
+							
+					    <div class="row paddingBeforeSourcePath " ng-if="currentPathItems!=null && errorMessage==''" >
+					      	<div class="col-md-10 col-lg-10"  >
+					      		<div class="alert alert-success zero-margin-bottom">  <!-- show the path -->
+					      		
+					      	
+										  <span ng-repeat="item in currentPathItems track by $index"     ng-class="{'path-active':$last}"
+										  ng-if="(item!='')&&(!isShowingPathSearchBar)" >
+										  	<span class="path-item"
+										  	ng-click="handleDirClick(currentPathItemsHref[$index], $last)">
+										  	{{item}}
+										  	</span>
+										  	<strong><span ng-if="!$last">/</span></strong>
+										  	
+										  </span> <!-- ng-repeat -->
+										  
+									  <div class="pull-right" ng-show="isLoadingPath||isLoadingFileContent" >
+									  	<img src="/busy-small.gif">
+									  </div>
+									  
+									  <a href class="pull-right" ng-show="(!isLoadingPath)&&(!isLoadingFileContent)&&(!isShowingPathSearchBar)" ng-click="handleStartPathSearch()" >
+									  	<img src="/search-glass.png">
+									  </a>
+										  
+										 <!-- path search -->
+										<input type="text" ng-model="searchPath" placeholder="Search for directories/files"
+										typeahead="item for item in searchForPath($viewValue)"
+										typeahead-on-select='handlePathSearchSelect($item, $model, $label)'
+										class="form-control"
+										ng-if="isShowingPathSearchBar"
+										id="path-search-bar"
+										focus-me="isShowingPathSearchBar"
+										typeahead-editable="false"
+										
+										
+										>
+										<!-- path search -->
+										
+										</div> <!-- show the path-->
+									<!--- show the small little warning -->
+										<div class="label label-warning" ng-if="analyzingMsg!=''"> Files analysis is still in progress; search may not fully function. <i>{{analyzingMsg}}</i></div>
+										
+									</div> <!-- col -->
+									
+
+							</div> <!-- row-->
+
+							<div class="row paddingBeforeCodeView1" ng-show="searchMessage!=''"> <!--- search message -->
+					      <div class="col-md-10 col-lg-10"  >
+					      		
+									  {{searchMessage}} <img src="busy-small.gif">
+								</div> <!-- col-md-10  -->
+								
+							</div> <!-- row, search message  -->
+
+							<div class="row paddingBeforeCodeView1" ng-show="isShowListOfTags"> <!--- list of tags  -->
+					      <div class="col-md-10 col-lg-10"  >
+										
+									  <p><strong>Which one would you like to search on?</strong></p>
+									  
+									  <span ng-repeat="item in listOfTags">
+									  	<a href ng-click="handleSearchWithTagId(item.id, item.tag)" ng-class="{'tag-class-one':$index%2==0, 'tag-class-two':$index%2==1}">  {{item.tag}} </a>
+									  	
+									  </span>
+									  <span ng-show="hasMoreTags"> ....................</span>
+								</div> <!-- col-md-10  -->
+								
+							</div> <!-- list of tags   -->
+														
+							
+							<div class="row paddingBeforeCodeView" ng-show="errorMessage!=''"> <!--- error message -->
+					      <div class="col-md-10 col-lg-10"  >
+
+									<div class="alert alert-dismissable alert-danger">
+									  
+									  {{errorMessage}}
+									</div>
+								</div> <!-- col-md-10  -->
+							</div> <!-- row, error message  -->
+							
+							<div class="row paddingBeforeCodeView" ng-show="processingMessage!=''"> <!--- project processing info  message -->
+					      <div class="col-md-10 col-lg-10"  >
+
+									<div class="alert alert-dismissable alert-info">
+									  <div class="pull-left smallBusySpiner" >
+									  	<img src="busy-small.gif">
+									  </div>
+									  {{processingMessage}}
+									  
+										
+								  <button class="btn btn-warning btn-xs pull-right" ng-click="cancelProject()" ng-hide="projectInfo==null||projectInfo.status=='ready'||projectInfo.status=='error' "
+    >Cancel project</button>
+									  
+									</div>
+
+								</div> <!-- col-md-10  -->
+							</div> <!-- row, processing info message  -->
+							
+
+					</div> <!-- container -->
+					      
+							
+							
+							
+			
+
+
+					<!--  -->
+
+					
+					
+					<div class="row paddingBeforeCodeView paddingAfterCodeView" ng-if="dirList!=null && errorMessage=='' && processingMessage=='' && searchMessage=='' && searchResults==null && !isShowListOfTags"> <!-- dir listing -->
+
+							<div class="col-md-11 col-lg-11">
+							
+								<table class="table table-striped dirListView">
+								 	<thead>
+    								<tr>
+    									<th> <a href="" ng-click="predicate = 'name'; reverse=!reverse">Name </a></th>
+    									<th> <a href="" ng-click="predicate = 'size'; reverse=!reverse" class="pull-right"> Size
+    										</a>
+    									</th>
+    									<th></th>
+    									
+    								</tr>
+    							</thead>
+								  <tbody>
+								    <tr ng-repeat="item in dirList | orderBy:['is_dir',predicate]:reverse"
+								    class="info"   >
+								      <td
+								      ng-click="handleDirOrFileClick(item)"
+								      ng-class="item.is_dir?'dirTypeItem':'fileTypeItem'">
+								      {{item.name}}<span ng-if="item.is_dir">/</span>
+								      	
+								      </td>
+								      <td >
+								      		<span ng-if="!item.is_dir" class="pull-right"> {{item.size|number}} </span>
+								      </td>
+								      <td>
+									      <div class="btn-group pull-right" role="group"  ng-if="!item.is_dir">
+										      <a href ng-click="handleDirOrFileClick(item)" class="btn btn-primary btn-xs">View</a>
+										      
+													<a href="{{apiBase}}/project-raw/{{projectInfo.id}}{{currentPath.slice(-1)=='/'?currentPath+item.name:currentPath+'/'+item.name}}" target="_blank" class="btn btn-warning btn-xs">Raw</a>
+													
+													<a href="{{apiBase}}/project-download/{{projectInfo.id}}{{currentPath.slice(-1)=='/'?currentPath+item.name:currentPath+'/'+item.name}}" target="_blank"  class="btn btn-success btn-xs">Download</a>
+										      	
+									      </div>
+								      </td>
+								    </tr>
+								  </tbody>
+								</table>
+
+
+
+							
+							</div> <!-- col -->
+
+					</div> <!-- dir listing -->
+
+
+					<div class="padLeftCodeView  paddingBeforeCodeView1 " ng-if="sourceCode!=null &&  processingMessage=='' && searchMessage=='' && dirList==null && searchResults==null && !isShowListOfTags">  <!-- raw and download button -->
+						<div class="pull-right">
+							<a href="{{apiBase}}/project-download/{{projectInfo.id}}{{currentPath}}" target="_blank"  class=" btn btn-success btn-xs">Download</a>
+							
+							<a href="{{apiBase}}/project-raw/{{projectInfo.id}}{{currentPath}}" target="_blank" class="btn btn-warning btn-xs">Raw</a>
+							
+						</div>
+
+					</div> <!-- download and raw button -->
+
+					<div class="padLeftCodeView paddingBeforeCodeView2 paddingAfterCodeView" ng-if="sourceCode!=null" ng-show="processingMessage=='' && searchMessage=='' && searchResults==null && !isShowListOfTags">  <!-- source code listing -->
+
+					
+						<div id="idHighLightCode" hljs source="sourceCode" highlightdone="highlightDone()" language={{highlightLanguage}} class="codeViewExtraProperties"   ng-mouseup="handleMouseUp($event)" popup-overlay-container></div> <!-- source code view ; note should not leave any space or else the highlight function is called multiple times at the beginning -->
+					
+					</div> <!-- source code lisiting -->
+					
+					
+					<!-- search results -->
+					<div class="padLeftCodeView paddingBeforeCodeView paddingAfterCodeView" ng-if="searchResults!=null">
+						<h4>
+							<span ng-if="searchResults.length>0">
+								{{searchResultString}}  <strong><i>{{searchTerm}}</i></strong>
+							</span>
+							<span ng-if="searchResults.length==0">
+								No search result found for   <strong><i>{{searchTerm}}</i></strong>
+							</span>
+						</h4>
+
+						
+						<div ng-repeat="item in searchResults">
+							
+							<a class="result-href" href="/view/project/{{projectInfo.id}}/{{item.path}}#L{{item.line_number}}">{{item.path}} :  line {{item.line_number}}</a>
+							<blockquote>
+								<span ng-bind-html="decorateLineImage(item.line_image, searchTerm, 150)"></span>
+							
+							</blockquote>
+							 
+						</div>
+						<div>
+							<h4><a   ng-if="searchHasMore" class="pull-right" ng-click="goToNextSearchPage()" ><strong>Next</strong></a></h4>
+							<h4><a   ng-if="searchPage>0" class="pull-left"   ng-click="goToPrevSearchPage()"><strong>Previous</strong></a></h4>
+						</div>
+					</div>
+					<!-- search results -->
+					
+
+      </div> <!-- center area -->
+      
+      <!-- -->
+      <div class="col-md-1 col-lg-1 col-sm-1">
+      
+      </div>
+    </div> <!-- row -->
+
+  </div>  <!-- container -->
+
+
+
+
+
+	<div id="popup-overlay" class="popup-overlay panel panel-default"> <!--- the popup when user click on a variable of function name -->
+	  <div id="popup-overlay-child1" class="panel-body">
+	  <p>
+		  <span>
+		  	 <button type="button" class="close pull-right" >×</button>
+		  	  <strong><i><span style="margin-right: 50px;">{{popupIdentifier}}</span></i></strong>
+	    </span>
+    </p>
+	   
+	   	 <!-- definitions -->
+			 <h5>
+			 <a href="/view/project/{{projectInfo.id}}/{{item.path}}?search={{popupIdentifier}}&type=definitions&page=0" ng-if="popupDefinitions.length>0" class="label label-primary">See all definitions </a>
+			</h5>
+			 	<span ng-if="popupDefinitions.length==0">No definitions found</span>
+
+			 	
+			 </h5>
+			 
+			 <img src="busy-small.gif" ng-if="popupDefinitions==null"> </img>
+			 
+	 			<div ng-repeat="item in popupDefinitions|limitTo:popupDisplayLimit">
+					
+					<a class="result-href-popup" href="/view/project/{{projectInfo.id}}/{{item.path}}#L{{item.line_number}}"><strong>{{item.path}} :  line {{item.line_number}}</strong></a> <i><span ng-bind-html="decorateLineImage(item.line_image, popupIdentifier,100)"></span></i>
+					
+					
+					 
+				</div>
+				<!-- definitions -->
+			 
+	   	 <!-- references -->
+			 <h5>
+			 <a href="/view/project/{{projectInfo.id}}/{{item.path}}?search={{popupIdentifier}}&type=references&page=0" ng-if="popupReferences.length>0" class="label label-primary">See all references </a>
+			 </h5>
+			 	
+			 	<span ng-if="popupReferences.length==0">No references found</span>
+
+			 	
+			 </h5>
+			 
+
+	 			<div ng-repeat="item in popupReferences|limitTo:popupDisplayLimit">
+					
+					<a class="result-href-popup" href="/view/project/{{projectInfo.id}}/{{item.path}}#L{{item.line_number}}"><strong>{{item.path}} :  line {{item.line_number}}</strong></a> <i><span ng-bind-html="decorateLineImage(item.line_image, popupIdentifier,50)"></span></i>
+					
+					
+					 
+				</div>
+				<!-- references -->
+
+		</div>
+	</div>				<!--- the popup when user click on a variable of function name -->
+
+
+
+
